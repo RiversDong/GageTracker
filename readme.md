@@ -331,7 +331,7 @@ GageTracker dm.ctl -ao -mos -p 5 # Only run the genome alignment with 5 processe
 GageTracker dm.ctl -ao -mos -lg -p 5 # Only run the genome alignment with 5 processes and mask the outgroup species, and also handling with aligning with large genomes
 GageTracker dm.ctl -rbh -p 5 # Get the RBH alignments based on the genome alignments with 5 processes
 GageTracker dm.ctl -da -p 5 # Get the gene age based on the results from the previous two steps (genome alignment and RBH results) with 5 processes.
-
+```
 #  TIPs
 ## TIP1:
 We have provided a toolkit (addaln), which allow users add a new reference genome without performing additional alignments that have done. Just typing the following, a new RBH alignment will be done
