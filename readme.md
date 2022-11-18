@@ -310,8 +310,8 @@ There are 9 necessary parameters in control file (ctl), which are used to design
 </html>
 
 ##  Running the program after preparing the user-defined control file
+### The basic command
 ```
-# The basic command
 GageTracker example.ctl [options]
     Options:
         -h, -help   show all options and their default settings, and exit
@@ -320,8 +320,9 @@ GageTracker example.ctl [options]
         -lg         align the large genome using lastal5 (default: lastal)
         -p          running the program in multi-processes
         -m          infer the originating mechanism for young genes
-
-# Here is some examples
+```
+### Here is some examples
+```
 GageTracker dm.ctl # Dating gene age without masking outgroups genomes (for genome size <1 Gb)
 GageTracker dm.ctl -m -p 12 # Dating gene age and infer originating mechanism with 12 processes
 GageTracker zebrafish.ctl -lg -p 2 # Dating gene age without masking outgroups genomes (for genome size >1 Gb)
@@ -333,7 +334,7 @@ GageTracker dm.ctl -rbh -p 5 # Get the RBH alignments based on the genome alignm
 GageTracker dm.ctl -da -p 5 # Get the gene age based on the results from the previous two steps (genome alignment and RBH results) with 5 processes.
 ```
 #  TIPs
-## TIP1:
+## TIP1: add new whole genome alignment as reference
 We have provided a toolkit (addaln), which allow users add a new reference genome without performing additional alignments that have done. Just typing the following, a new RBH alignment will be done
 ```
 addaln -add /home/chuand/new_gene/virilis/fasta/dbusckii.fasta -br B1 -ct dvirilis.ctl
