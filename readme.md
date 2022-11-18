@@ -323,15 +323,32 @@ GageTracker example.ctl [options]
 ```
 ### Here is some examples
 ```
-GageTracker dm.ctl # Dating gene age without masking outgroups genomes (for genome size <1 Gb)
-GageTracker dm.ctl -m -p 12 # Dating gene age and infer originating mechanism with 12 processes
-GageTracker zebrafish.ctl -lg -p 2 # Dating gene age without masking outgroups genomes (for genome size >1 Gb)
-GageTracker human.ctl -lg -p 2 -mos # Dating gene age with masking outgroups genomes (for large genome size ~3 Gb)
-GageTracker dm.ctl -ao -p 5 # Only run the genome alignment with 5 processes
-GageTracker dm.ctl -ao -mos -p 5 # Only run the genome alignment with 5 processes and mask the outgroup species
-GageTracker dm.ctl -ao -mos -lg -p 5 # Only run the genome alignment with 5 processes and mask the outgroup species, and also handling with aligning with large genomes
-GageTracker dm.ctl -rbh -p 5 # Get the RBH alignments based on the genome alignments with 5 processes
-GageTracker dm.ctl -da -p 5 # Get the gene age based on the results from the previous two steps (genome alignment and RBH results) with 5 processes.
+# Dating gene age without masking outgroups genomes (for genome size <1 Gb)
+GageTracker dm.ctl
+
+# Dating gene age and infer originating mechanism with 12 processes
+GageTracker dm.ctl -m -p 12
+
+# Dating gene age without masking outgroups genomes (for genome size >1 Gb)
+GageTracker zebrafish.ctl -lg -p 2 
+
+# Dating gene age with masking outgroups genomes (for large genome size ~3 Gb)
+GageTracker human.ctl -lg -p 2 -mos 
+
+# Only run the genome alignment with 5 processes
+GageTracker dm.ctl -ao -p 5
+
+# Only run the genome alignment with 5 processes and mask the outgroup species
+GageTracker dm.ctl -ao -mos -p 5
+
+# Only run the genome alignment with 5 processes and mask the outgroup species, and also handling with aligning with large genomes
+GageTracker dm.ctl -ao -mos -lg -p 5
+
+# Get the RBH alignments based on the genome alignments with 5 processes
+GageTracker dm.ctl -rbh -p 5
+
+# Get the gene age based on the results from the previous two steps (genome alignment and RBH results) with 5 processes
+GageTracker dm.ctl -da -p 5 
 ```
 #  TIPs
 ## TIP1: add new whole genome alignment as reference
