@@ -62,7 +62,7 @@ The following table gives the detailed explanations for each of the parameters i
   <p class=MsoNormal style='margin-bottom:4.65pt'><b><span lang=EN-US
   style='font-family:"Times New Roman",serif'>Example</span></b></p>
   </td>
-  <td width=350 valign=top style='width:205.55pt;border:solid #BFBFBF 1.0pt;
+  <td width=400 valign=top style='width:205.55pt;border:solid #BFBFBF 1.0pt;
   border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:4.65pt'><b><span lang=EN-US
   style='font-family:"Times New Roman",serif'>Explanations</span></b></p>
