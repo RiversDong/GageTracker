@@ -40,7 +40,7 @@ There are 9 necessary parameters in control file (ctl), which are used to design
 
 ![Tree](https://user-images.githubusercontent.com/45725241/202661978-5b76599b-e118-4f93-ba72-735686bfae6e.png "Tree for dating D.melanogaster. D.melanogaster is our target species and others are outgroup species (reference species). The tree showing here was cited from Zhang et al ")
 
-The following
+The following table gives the detailed explanations for each of the parameters in user’s control file, in which the first column lists the necessary parameters, the second column lists the example for what value should be given and the final one gives its corresponding description.
 <html>
 
 <head>
