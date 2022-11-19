@@ -7,6 +7,7 @@ GageTracker is a python package for dating gene age by micro- and macro- colline
 - Easily add new reference genome RBH alignment without performing additional alignment that have done previously
 
 <img src="https://user-images.githubusercontent.com/45725241/202850768-d9fdc0a2-a9e6-4c13-a5a6-a296152e76d1.png" width="80%">
+
 # Dependencies
 All the dependencies (listed in the following table) should be pre-installed. The users need to add all the corresponding executable programs to environmental path before running GageTracker for dating gene age.
 | Software | Links |
