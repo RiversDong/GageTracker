@@ -14,7 +14,6 @@ All the dependencies (listed in the following table) should be pre-installed. Th
 | tantan | https://gitlab.com/mcfrith/tantan |
 | bedtools | https://github.com/arq5x/bedtools2/releases |
 | maf2synteny | https://github.com/fenderglass/maf2synteny |
-| UCSC utilities | Already in GageTracker/bin/ |
 | windowmasker | https://github.com/goeckslab/WindowMasker |
 | BLAST toolkit | ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ |
 # Installation
