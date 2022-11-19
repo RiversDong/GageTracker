@@ -5,7 +5,7 @@ GageTracker is a python package for dating gene age by micro- and macro- colline
 - Run each command step-by-step, which facilitate to add new outgroup species without having to repeat the comparison of the previous aligned species, thus cab save more time
 - GageTracker can handle the comparison of large genomes by masking outgroup species and utilizing lastdb5 alignment
 - Easily add new reference genome RBH alignment without performing additional alignment that have done previously
-<img src="https://user-images.githubusercontent.com/45725241/202850085-e8723cd8-1638-4f8e-8027-d1274bf3f97f.jpg" height="50%" alt="图片名称" align=center />
+![pipline](https://user-images.githubusercontent.com/45725241/202850768-d9fdc0a2-a9e6-4c13-a5a6-a296152e76d1.png)
 # Dependencies
 All the dependencies (listed in the following table) should be pre-installed. The users need to add all the corresponding executable programs to environmental path before running GageTracker for dating gene age.
 | Software | Links |
