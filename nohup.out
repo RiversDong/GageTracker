@@ -1,0 +1,9 @@
+/home/chuand/.bin/miniconda3/lib/python3.8/site-packages/gtfparse/read_gtf.py:82: FutureWarning: The error_bad_lines argument has been deprecated and will be removed in a future version. Use on_bad_lines in the future.
+
+
+  chunk_iterator = pd.read_csv(
+/home/chuand/.bin/miniconda3/lib/python3.8/site-packages/gtfparse/read_gtf.py:82: FutureWarning: The warn_bad_lines argument has been deprecated and will be removed in a future version. Use on_bad_lines in the future.
+
+
+  chunk_iterator = pd.read_csv(
+INFO:root:Extracted GTF attributes: ['gene_id', 'db_xref', 'gbkey', 'gene', 'gene_biotype', 'transcript_id', 'model_evidence', 'product', 'exon_number', 'pseudo', 'protein_id', 'exception', 'note', 'partial', 'deleted', 'substituted', 'transl_except', 'anticodon', 'inference']
