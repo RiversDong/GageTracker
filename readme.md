@@ -20,7 +20,7 @@ All the dependencies (listed in the following table) should be pre-installed. Th
 | windowmasker | https://github.com/goeckslab/WindowMasker |
 | BLAST toolkit | ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ |
 
-And also the UCSC tools are also needed, please downloaded these tools from http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/.
+And the UCSC tools are also needed, please downloaded these tools from http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/.
 ```
 axtChain, axtSort, axtToMaf, axtToPsl, chainCleaner, chainFilter, chainNet, chainPreNet, chainSort, chainStitchId, chainSwap, chainToPsl, faSize, faToTwoBit, mafToPsl, netChainSubset, netSyntenic, netToAxt, pslToChain
 ```
