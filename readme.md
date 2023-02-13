@@ -22,8 +22,9 @@ All the dependencies (listed in the following table) should be pre-installed. Th
 
 And also the UCSC tools are also needed, please downloaded these tools from http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/.
 ```
-axtChain, axtSort, axtToMaf, axtToPsl, chainCleaner, chainFilter, chainNet, chainPreNet, chainSort, chainStitchId, chainSwap, chainToPsl, chainToPslBasic, faSize, faToTwoBit, mafToPsl, netChainSubset, netClass, netSyntenic, netToAxt, pslToChain
+axtChain, axtSort, axtToMaf, axtToPsl, chainCleaner, chainFilter, chainNet, chainPreNet, chainSort, chainStitchId, chainSwap, chainToPsl, faSize, faToTwoBit, mafToPsl, netChainSubset, netSyntenic, netToAxt, pslToChain
 ```
+**Please note that all dependencies must be added to the environment path before using GageTracker!!**
 
 # Installation
 ## Download the latest released GageTracker version from github:
