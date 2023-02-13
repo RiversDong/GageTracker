@@ -1,257 +1,291 @@
 #!/usr/bin/env python3
 
+from gtfparse import read_gtf
 import os
-from multiprocessing import Pool
-from multiprocessing.dummy import Pool as ThreadPool
-from Bio import SeqIO
-from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
+import re
+import pandas as pd
+from pandas import Series
 
-def pathBuilt(outpath):
-    masking = os.path.join(outpath, "masking")
-    if not os.path.exists(masking):
-        os.mkdir(masking)
-    last = os.path.join(outpath, "last")
-    if not os.path.exists(last):
-        os.mkdir(last)
-    lastdb = os.path.join(outpath, "lastdb")
-    if not os.path.exists(lastdb):
-        os.mkdir(lastdb)
-    chain = os.path.join(outpath, "chain")
-    if not os.path.exists(chain):
-        os.mkdir(chain)
-    twoBit = os.path.join(outpath, "2bit")
-    if not os.path.exists(twoBit):
-        os.mkdir(twoBit)
-    size = os.path.join(outpath, "size")
-    if not os.path.exists(size):
-        os.mkdir(size)
-    cleanChain = os.path.join(outpath, "cleanChain")
-    if not os.path.exists(cleanChain):
-        os.mkdir(cleanChain)
-    rBest = os.path.join(outpath, "rBest")
-    if not os.path.exists(rBest):
-        os.mkdir(rBest)
-    maf = os.path.join(outpath, "axt2maf")
-    if not os.path.exists(maf):
-        os.mkdir(maf)
-    block = os.path.join(outpath, "block")
-    if not os.path.exists(block):
-        os.mkdir(block)
-    psl = os.path.join(outpath, "psl")
-    if not os.path.exists(psl):
-        os.mkdir(psl)
-    newfa = os.path.join(outpath, "nfasta")
-    if not os.path.exists(newfa):
-        os.mkdir(newfa)
-    mechanism = os.path.join(outpath, "mechanism")
-    if not os.path.exists(mechanism):
-        os.mkdir(mechanism)
-    return masking, last, lastdb, psl, twoBit, size, chain, cleanChain, rBest, maf, block, newfa
-
-def get_focal_size(target, size_path):
-    target_base = os.path.basename(target)
-    isize=os.path.join(size_path, target_base+".chrom.sizes")
-    cmd = "faSize {0} -detailed -tab | sort -k1 > {1}".format(target, isize)
-    os.system(cmd)
-    return isize
-
-#def addPrefix(refDic, newFaPath, mask="false"):
-def addPrefix(refDic, newFaPath, process_num=1, mask="false"):
-    print("Step I: Add prefix for each ID of focal species and outgroup species...")
-    new_reference = {}
-    for i in refDic:
-        new_reference[i]=[]
-        ispecies = refDic[i]
-        for j in ispecies:
-            new_reference[i].append(os.path.join(newFaPath, os.path.basename(j)))
-    tmp_ref_fasta = list(refDic.values()); ref_fasta=[]
-    for i in tmp_ref_fasta:
-        ref_fasta.extend(i)
-    for i in ref_fasta:
-        ibase = os.path.basename(i)
-        new_fa = os.path.join(newFaPath, ibase)
-
-        # --- following is the newly added for maked the reference genome ---
-        masked_ibase = os.path.join(newFaPath, ibase+".msk")
-        cmd_tantan = "tantan {0} > {1}".format(i, masked_ibase)
-        os.system(cmd_tantan)
-        # ---end ---
-
-        # After mask reference genome by tantan, we should read the masked genome
-        # And add "ref_" prefix to the masked reference genomes
-        irecords = SeqIO.parse(masked_ibase, "fasta"); new_records = []
-        for j in irecords:
-            jid = "ref_"+str(j.id) 
-            #jseq = str(j.seq).upper()
-            jseq = str(j.seq)
-            jrec = SeqRecord(Seq(jseq), id = jid, description="")
-            new_records.append(jrec)
-        SeqIO.write(new_records, new_fa, "fasta")
-    if mask == "true":
-        '''
-        mask the genomes by multiprocessing
-        '''
-        new_reference_mask={}
-        cmd1_list = []; cmd2_list = []
-        for i in new_reference:
-            refs = new_reference[i]
-            new_reference_mask[i]=[]
-            for j in refs:
-                window_tmp = j+".tmp"
-                window_mask=j+".w"
-                cmd1 = "windowmasker -mk_counts -in {0} -infmt fasta -out {1} -sformat obinary &> /dev/null".format(j, window_tmp); cmd1_list.append(cmd1)
-                cmd2 = "windowmasker -ustat {0} -in {1} -out {2} -outfmt fasta".format(window_tmp,j,window_mask); cmd2_list.append(cmd2)
-                new_reference_mask[i].append(window_mask)
-        pool = ThreadPool(process_num); pool.map(os.system, cmd1_list)
-        pool.map(os.system, cmd2_list);
-        # 以下代码将.w后缀去掉
-        for i in new_reference:
-            ifiles = new_reference[i]
-            for j in ifiles:
-                wfile = j + ".w"
-                os.remove(j);
-                os.rename(wfile, j)
-        print(new_reference)
-        return new_reference
-    else:
-        return new_reference
-    
-def repeatMasking(tfa, masking):
-    '''
-    repeat mask the focal species
-    '''
-    print("Step II: Mask the repeat sequences of focal species...")
-    ibase = os.path.basename(tfa)
-    itmp = os.path.join(masking, ibase+".tmp")
-    cmd1 = "windowmasker -mk_counts -in {0} -infmt fasta -out {1} -sformat obinary &> /dev/null".format(tfa, itmp)
-    os.system(cmd1)
-    
-    imask = os.path.join(masking, ibase+".tmpmask")
-    cmd2 = "windowmasker -ustat {0} -in {1} -out {2} -outfmt fasta".format(itmp, tfa, imask) 
-    os.system(cmd2)
-    
-    iintervals = os.path.join(masking, ibase+".intervals")
-    cmd3 = "windowmasker -ustat {0} -in {1} -out {2} -outfmt interval".format(itmp, tfa, iintervals) 
-    os.system(cmd3)
-    return imask, iintervals
-    
-def repFunc(positions, seq):
-    for j in positions:
-        start = j[0]-1; end = j[1]
-        exon_seq = seq[start:end]
-        replace_str = exon_seq.upper()
-        seq = seq[:start] + replace_str + seq[end:]
-    return seq
-    
-def mask_gene_ratio(intervals, exonbed, pre_mask, chrsize):
-    '''
-    pre_mask is the masked genomes
-    '''
-    print("Step III: Change the masked exon to unmask state...")
-    "get the mask bed file that storing the mask region of each chromosome"
-    f = open(intervals).read().split("\n")[0:-1]
-    intervals_bed = os.path.join(os.path.split(pre_mask)[0], "intervals.bed")
-    out_intervals = open(intervals_bed, "w")
-    out_overlap = intervals_bed+".wo"
-    chr2pos = {}; chr_list = []
+def gene_mask_ratio(exon_bed, mask_interval):
+    exon_f = open(exon_bed).read().split("\n")[0:-1]
+    gene2exonregion = {}; gene2chr = {}; 
+    for i in exon_f:
+        info = i.split(); gene=info[4]; chr = info[0]
+        exon_start = int(info[1]); exon_end = int(info[2])
+        gene2chr[gene] = chr
+        if gene not in gene2exonregion:
+            # because python range does't contain the last position
+            # to get the actial position of an exon, I add 1 manually
+            gene2exonregion[gene] = list(range(exon_start, exon_end+1))
+        else:
+            gene2exonregion[gene].extend(list(range(exon_start, exon_end+1)))
+    f = open(mask_interval).read().split("\n")[0:-1]
+    chr2maskregion = {}
     for i in f:
         if ">" in i:
-            chromosome = i.split()[0].replace(">",""); chr_list.append(chromosome)
-            chr2pos[chromosome] = []
+            chromosome = i.split()[0].replace(">","")
+            chr2maskregion[chromosome] = []
         else:
             start, end = i.split(" - ")
-            start = str(int(start)); end = str(int(end)+2)
-            chr2pos[chromosome].append([start, end]);
-    chr_list.sort()
-    for i in chr_list:
-        ipositions = chr2pos[i]
-        for j in ipositions:
-            out_intervals.write(i+"\t" + "\t".join(j)+"\n")
-    out_intervals.close()
-    cmd = "bedtools intersect -a {0} -b {1} -wo > {2}".format(intervals_bed, exonbed, out_overlap)
-    os.system(cmd)
-    f = open(out_overlap).read().split("\n")[0:-1]
-    overlapped_exon = []
-    for i in f:
-        exon = i.split("\t")[3:6]; exon = "\t".join(exon); overlapped_exon.append(exon)
-    overlapped_exon_set = set(overlapped_exon)
-    chr2exonpos = {}
-    for i in overlapped_exon_set:
-        info = i.split("\t"); chromosome = info[0]; exonstart,exonend=int(info[1]),int(info[2])
-        if chromosome not in chr2exonpos:
-            chr2exonpos[chromosome] = [[exonstart, exonend]]
-        else:
-            chr2exonpos[chromosome].append([exonstart, exonend])
-    #records = SeqIO.parse(pre_mask, "fasta")
-    #rec_list = []
-    #for i in records:
-    #    iid = str(i.id)
-    #    sequence = str(i.seq);
-    #    if iid in chr2exonpos:
-    #        positions = chr2exonpos[iid]
-    #         new_sequence = repFunc(positions, sequence);
-    #        rec = SeqRecord(Seq(new_sequence), id = iid, description=""); rec_list.append(rec)
-    #    else:
-    #        new_sequence = sequence
-    #        rec = SeqRecord(Seq(new_sequence), id = iid, description=""); rec_list.append(rec)
-    new_mask = pre_mask.replace(".tmpmask", ".mask")
-    #SeqIO.write(rec_list, new_mask, "fasta")
-    #return new_mask
-    '''
-    replace the aboved python script by the perl script written by Fang
-    '''
-    perl_script = os.path.join(os.path.dirname(__file__), "gene.exon.upper.pl")
-    cmd ="perl " + perl_script + " {0} {1} {2} > {3}".format(exonbed, pre_mask, chrsize, new_mask)
-    os.system(cmd)
-    return new_mask
+            start = int(start)+1; end = int(end)+1
+            # because python range does't contain the last position
+            # to get the actual position of an interval, I add 1 manually
+            chr2maskregion[chromosome].extend(list(range(start, end+1)))
+    for i in chr2maskregion:
+        chr2maskregion[i] = set(chr2maskregion[i])
 
-def genomeAlignment(focalmask, reference, dbpath, last, threadNum=5, lg="false"):
-    '''
-    genome alignment by last program
-    '''
-    focus_basename = os.path.basename(focalmask)
-    dbname = os.path.join(dbpath, focus_basename + ".db")
-    focus_mask = focalmask
-    reference_tmp = reference.values(); reference_mask = []
-    for i in reference_tmp:
-        reference_mask.extend(i)
-    print("Step IV: Whole genome alignments...")
-    print("  IV.1 construct the db index using {0}".format(focus_basename))
-    if lg=="true":
-        '''
-        if the genome is large genome, perform the alignment by lastdb5 and lastal5
-        '''
-        makedb = "lastdb5  -P18 -c -R11 -uMAM8 {0} {1}".format(dbname ,focus_mask)
-        os.system(makedb)
-        po = Pool(threadNum)
-        print("  IV.2 whole genome alignment between reference and focus in {} processes".format(threadNum))
-        for i in reference_mask:
-            ibase = os.path.basename(i);iout = os.path.join(last, ibase+".maf")
-            cmd = "lastal5 -P 6 -C2 -u0 -m50 -p HOXD70 {0} {1} > {2}".format(dbname,i, iout)
-            po.apply_async(os.system,(cmd, ))
-        po.close(); po.join()
-    else:
-        makedb = "lastdb -P18 -c -R01 -uMAM8 {0} {1}".format(dbname ,focus_mask)
-        os.system(makedb)
-        po = Pool(threadNum)
-        print("  IV.2 whole genome alignment between reference and focus in {} processes".format(threadNum))
-        for i in reference_mask:
-            ibase = os.path.basename(i);iout = os.path.join(last, ibase+".maf")
-            cmd = "lastal -P 6 -C2 -u0 -m50 -p HOXD70 {0} {1} > {2}".format(dbname,i, iout)
-            po.apply_async(os.system,(cmd, ))
-        po.close(); po.join()
+    gene2ratio = {}
+    for i in gene2exonregion:
+        igene_exonset = set(gene2exonregion[i]); ichr = gene2chr[i]
+        imaskset = chr2maskregion[ichr]
+        ratio = round(len(igene_exonset.intersection(imaskset))/len(igene_exonset), 3)
+        gene2ratio[i] = ratio
+    return gene2ratio
 
+def group_by_element(lst):
+    index = []; result = []
+    for i, _ in enumerate(lst):
+        if i < len(lst) - 1 and lst[i + 1] != lst[i]:
+            index.append(i + 1)
+    result.append(lst[:index[0]])
+    for i, item in enumerate(index):
+        if i < len(index) - 1:
+            result.append(lst[index[i]:index[i + 1]])
+    result.append(lst[item:])
+    return result
+
+def codeName(tid, codefor):
+    tid = list(tid); tid = group_by_element(tid); exonId = []; chrId=[]
+    if codefor == "exon":
+        for i in tid:
+            eindex = 0
+            for j in i:
+                exonId.append("E_"+str(eindex));eindex = eindex+1
+        return exonId
+    elif codefor == "chr":
+        for i in tid:
+            gindex = 0
+            for j in i:
+                chrId.append(j+"_"+str(gindex)); gindex+=1
+        return chrId
+
+def getInfo(gtf, exonBed, geneBed):
+    df = read_gtf(gtf); columns = ["seqname", "start", "end", "transcript_id", "gene_id"]
+    exonInfo = df[df["feature"] == "exon"].loc[:,columns]
+    exonLen = exonInfo["end"]-exonInfo["start"]; exonInfo['exonLen']=exonLen; tlen=[]
+    t2len = exonInfo.groupby("transcript_id")["exonLen"].sum(); tids = exonInfo["transcript_id"]
+    exonId = codeName(tids, "exon"); exonInfo["exonId"]=exonId
+    tLenList = [t2len[i] for i in tids]; exonInfo['tlen'] = tLenList
+    out_column = ["seqname", "start", "end", "transcript_id", "gene_id", "exonId", "tlen"]
+    exonInfo.loc[:,out_column].to_csv(exonBed, sep="\t", index=False, header=0)
+
+    geneInfo = df[df["feature"] == "gene"]
+    geneInfo.loc[:,["seqname","start","end","gene_id"]].to_csv(geneBed, sep="\t", index=False, header=0)
     
+def blockGene(axt2maf, block, alignment_file, tarchrsize, gene_bed):
+    '''
+    deal with block gene functions
+    '''
+    data = pd.read_csv(tarchrsize, sep="\t", header=None); tarchrs = list(data[0]); mafs = os.listdir(axt2maf)
+    pd_gap_species = pd.DataFrame()
+    f = open(gene_bed).read().split("\n"); genes = [i.split("\t")[3] for i in f if i!=""]
+    pd_gap_species["gene"] = genes
+    gapGeneOut = os.path.join(block, "gene.gap")
+    for i in mafs:
+        # get the coarse-grained synteny blocks via maf2synteny
+        # result is stored in outpath/block/ifasta_f
+        inmaf = os.path.join(axt2maf, i); ifasta_f = i.replace(".maf", "")
+        iblock = os.path.join(block , ifasta_f)
+        cmd = "maf2synteny -o {} -b 100 -s {} {} &> /dev/null".format(iblock, alignment_file, inmaf)
+        os.system(cmd)
+
+        # calculate the gap gene list for reference ifasta_f
+        coord = os.path.join(iblock, "100"); coord = os.path.join(coord, "blocks_coords.txt")
+        f = open(coord).read().split("\n"); f = f[0:-1]
+        id2des = {} # sequence id to chromosome
+        for j in f:
+            iinfo = j.split()
+            leninfo=len(iinfo)
+            if leninfo!=0 and re.match('^[0-9]',iinfo[0]) and re.match('^[0-9]',iinfo[1]):
+                if "ref_" not in iinfo[2]:
+                    id2des[iinfo[0]] = iinfo[2]
+        chrs=[]; starts=[]; ends=[]
+        for j in f:
+            iinfo = j.split(); leninfo=len(iinfo); iid = iinfo[0]
+            if leninfo!=0 and leninfo >= 5 and iid in id2des:
+                strand = iinfo[1]; length = iinfo[4]
+                ichr = id2des[iid]
+                if ichr in tarchrs: 
+                    if strand == "+":
+                        start,end=iinfo[2],iinfo[3]
+                    else:
+                        start,end=iinfo[3],iinfo[2]
+                    chrs.append(id2des[iid]); starts.append(int(start)), ends.append(int(end))
+        blockouttmp = os.path.join(block, "blocktmp")
+        blockout = os.path.join(block, ifasta_f + ".block")
+        blockrange={"chrs":chrs, "starts":starts,"ends":ends}; blockrange=pd.DataFrame(blockrange)
+        blockrange.to_csv(blockouttmp, sep="\t", index=False, header=0)
+        sortblock = "cat {0} |cut -f1-3 |sort -k1,1 -k2,2n > {1}".format(blockouttmp, blockout)
+        os.system(sortblock)
+        gap_list_file = os.path.join(block, "tmp.gaplist")
+        cmd_gapgene = "bedtools complement -i {}".format(blockout)
+        cmd_gapgene = cmd_gapgene + " -g {}".format(tarchrsize)
+        cmd_gapgene = cmd_gapgene + " | awk '{if($3-$2>20000){print}}'"
+        cmd_gapgene = cmd_gapgene + " | bedtools intersect -a {} -b stdin -f 1 -wa -wb | cut -f4 | sort -u > {}".format(gene_bed, gap_list_file)
+        os.system(cmd_gapgene)
+        
+        # form the present and absent list for all genes and all species
+        geneInGap = open(gap_list_file).read().split("\n"); geneInGap.remove(""); gap_table = []
+        for gene in genes:
+            if gene in geneInGap:
+                gap_table.append(1)
+            else:
+                gap_table.append(0)
+        pd_gap_species[ifasta_f] = gap_table
+    pd_gap_species.to_csv(gapGeneOut, sep="\t", index=False)
+
+def exonIntersectRbest(rBest, exon_bed, block):
+    files = os.listdir(rBest);filespath = [os.path.join(rBest, i) for i in files]
+    for i in filespath:
+        f = open(i).read().split("\n")
+        ioutfile = os.path.join(os.path.dirname(exon_bed),"rBest.tmp")
+        iout = open(ioutfile ,"w")
+        for j in f:
+            info = j.split()
+            if len(info)==9:
+                outinfo = [info[1], info[2], info[3]]
+                iout.write("\t".join(outinfo)+"\n")
+        iout.close()
+        interfile = os.path.join(os.path.dirname(exon_bed),"interExonRbest.tmp")
+        cmdinter = "bedtools intersect -a {} -b {} -wo > {}".format(exon_bed, ioutfile, interfile)
+        os.system(cmdinter)
+        wo2out = os.path.join(block, os.path.basename(i).replace(".rBest.chain.net.axt","")+".wo2")
+        cmd_wo_2 = "less %s |awk 'BEGIN{OFS=\"\t\"}{s[$4] += $11;g[$4]=$5;t[$4]=$7} END {for (i in s) {print g[i],i,t[i],s[i],s[i]/t[i]}}' |sort -k1,1 -k2,2 > %s" %(interfile, wo2out)
+        os.system(cmd_wo_2)
+        overlappedGene = os.path.join(block, os.path.basename(i).replace(".rBest.chain.net.axt","")+".rbhGene")
+        cmd_wo2_gene = "awk '{if($5>=0.3){print $1}}' %s |sort -u > %s" %(wo2out,overlappedGene)
+        os.system(cmd_wo2_gene)
+
+def presentOrabsent(x):
+    value = 1 if x>=1 else 0
+    return value
+    
+def speciesGap2BranchGap(y):
+    if y.sum() == len(y):
+        value = 1
+    else:
+        value = 0
+    return value
+    
+def getIndex(inlist):
+    return [index for (index, value) in enumerate(inlist) if value == 1]
+    
+#def getIndex(inlist):
+#    pos = [i for i in range(len(inlist)) if inlist[i]==1]
+#    return pos
+
+def dating(block, gene_bed, reference, branch, outpath, agefile, voting, gene2ratio):
+    br2ref = {}
+    for i in reference:
+        ilist = reference[i]
+        newList = [os.path.basename(j) for j in ilist]
+        br2ref[i]=newList
+    f = open(gene_bed).read().split("\n")
+    genes = [i.split("\t")[3] for i in f if i!=""]
+    chrs = [i.split("\t")[0] for i in f if i!=""]
+    start_positoin = [i.split("\t")[1] for i in f if i!=""]
+    end_positoin = [i.split("\t")[2] for i in f if i!=""]
+
+    files = os.listdir(block)
+    homoFile = [os.path.join(block, i) for i in files if ".rbhGene" in i]
+    gene2present = {}
+    gene2present["gene"]=genes
+    for i in homoFile:
+        ibase = os.path.basename(i).replace(".rbhGene","")
+        homoLists = open(i).read().split("\n")
+        homoLists.remove("")
+        table = [1 if genei in homoLists else 0 for genei in genes]
+        gene2present[ibase]=table
+    pd_gene2present = pd.DataFrame(gene2present)
+    brHomoPd = pd.DataFrame();  brHomoPd["gene"]=genes
+    brBreakPd = pd.DataFrame(); brBreakPd["gene"]=genes
+    speciesBreakPd = pd.read_csv(os.path.join(block,"gene.gap"),sep="\t")
+    refbranch = branch[1:]
+    for i in refbranch:
+        iref = br2ref[i]; ihomo = pd_gene2present.loc[:,iref]
+        isum = ihomo.apply(lambda x: presentOrabsent(x.sum()), axis=1)
+        brHomoPd[i]=isum
+        ibreak = speciesBreakPd.loc[:,iref]
+        breaksum = ibreak.apply(lambda y:speciesGap2BranchGap(y), axis=1)
+        brBreakPd[i]=breaksum
+    #--test
+    #brBreakPd.to_csv("del", sep="\t", index=False)
+    pd_gene2present.to_csv("homo.table", sep="\t", index=False)
+    #--
+    geneindex = range(0, len(genes))
+    refBrNum = len(branch)-1
+    age_out = open(os.path.join(outpath, agefile), "w")
+    tmp_title1 = ["In_"+br for br in branch]
+    tmp_title2 = ["Confidence","Branch", "Chromosome", "Start", "End", "Gene", "GeneMaskRatio"]
+    out_title = "\t".join(tmp_title2) + "\t" + "\t".join(tmp_title1) + "\t" + "MC"
+    age_out.write(out_title+"\n")
+    for i in geneindex:
+        iinfo = list(brHomoPd.loc[i,:]); genei=iinfo[0]
+        tablei = iinfo[1:] # not include the gene ID in the focal species
+        tmp_label = ""
+        if sum(tablei) == 0:
+            age = branch[0]
+        else:
+            homoindex = getIndex(tablei) # first homo index in references
+            condiction_checking=[0] # -- newly added for checking if satisfying >= voting --
+            for j in homoindex:
+                jsublist = tablei[:j+1]
+
+                if (jsublist.count(1)+1)/(len(jsublist)+1) >= voting:
+                    # Missed out on handling of a situation, I have solved it by adding a check list "condiction_checking"
+                    age = branch[j+1]
+                    condiction_checking.append(1)
+                        
+            #-- newly added for handle the 'for loop' for the condiction that hasn't gene meant the internal 'if condiction'--
+            
+            if sum(condiction_checking) == 0:
+                age = branch[0]
+                tmp_label = "NT"
+            # --
+                    
+        istart = str(start_positoin[i]); iend = str(end_positoin[i])
+        ichr = chrs[i]
+        tmp_table = [str(kk) for kk in tablei]
+        gaplist = list(brBreakPd.loc[i,:]); gaplist = gaplist[1:]
+        confidence = "CON"
+
+        # remove genes in gap positions
+        if age != branch[-1]:
+            gene_age_index = branch.index(age)
+            if gene_age_index == 0:
+                gap_num = sum(gaplist[0:2])
+                nb_num = 2
+            elif gene_age_index == len(branch)-1:
+                gap_num = sum(gaplist[gene_age_index])
+                nb_num = 1
+            else:
+                gap_num = sum(gaplist[gene_age_index-1:gene_age_index+1])
+                nb_num = 2
+            if gap_num == nb_num:
+                confidence = "NCON"
+        if genei in gene2ratio:
+            mask_ratio = str(gene2ratio[genei])
+        else:
+            mask_ratio = "NA"
+        resultInfo = [confidence, age, ichr,istart,iend, genei,mask_ratio,"1"+"\t"+"\t".join(tmp_table), tmp_label]
+        age_out.write("\t".join(resultInfo)+"\n")
+    age_out.close()
+
 if __name__ == "__main__":
-    chr_size = "/home/chuand/new_gene/virilis/dating/size/dvirilis.fasta.chrom.sizes"
-    new_mask = mask_gene_ratio("/home/chuand/new_gene/virilis/dating/masking/dvirilis.fasta.intervals", "/home/chuand/new_gene/virilis/dating/exon.bed", "/home/chuand/new_gene/virilis/dating/masking/dvirilis.fasta.tmpmask",chr_size)
-    print(new_mask)
-
-    #refDic={"br1": ["/home/chuand/new_gene/human/data/fasta/x_tropicalis.fasta"], "br2":["/home/chuand/new_gene/human/data/fasta/chicken.fasta","/home/chuand/new_gene/human/data/fasta/zebra_finch.fasta","/home/chuand/new_gene/human/data/fasta/lizard.fasta"]}
-    #new_reference = addPrefix(refDic, "/home/chuand/new_gene/human/dating/nfasta",mask="true")
-    #new_reference = addPrefix(refDic, "/home/chuand/new_gene/human/dating/nfasta",mask="false")
-
-
-
-
+    #getInfo("/home/chuand/new_gene/bin/gene_age_pridiction/example/dvirilis.gtf","/home/chuand/new_gene/tmp/exon.bed","/home/chuand/new_gene/tmp/gene.bed")
+    #blockGene("/home/chuand/new_gene/tmp/axt2maf", "/home/chuand/new_gene/tmp/block", "/home/chuand/new_gene/bin/gene_age_pridiction/bin/maf2synteny.param.file", "/home/chuand/new_gene/tmp/size/dvirilis.fasta.chrom.sizes", "/home/chuand/new_gene/tmp/gene.bed")
+    #exonIntersectRbest("/home/chuand/new_gene/tmp/rBest", "/home/chuand/new_gene/tmp/exon.bed","/home/chuand/new_gene/tmp/block")
+    ctr = open("/home/chuand/new_gene/geneAger/ctl").read()
+    exec(ctr)
+    dating("/home/chuand/new_gene/tmp/block", "/home/chuand/new_gene/tmp/gene.bed",reference, branch,"/home/chuand/new_gene/tmp")
+    
