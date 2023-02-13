@@ -19,6 +19,12 @@ All the dependencies (listed in the following table) should be pre-installed. Th
 | maf2synteny | https://github.com/fenderglass/maf2synteny |
 | windowmasker | https://github.com/goeckslab/WindowMasker |
 | BLAST toolkit | ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ |
+
+And also the UCSC tools are also needed, please downloaded these tools from http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/.
+```
+axtChain, axtSort, axtToMaf, axtToPsl, chainCleaner, chainFilter, chainNet, chainPreNet, chainSort, chainStitchId, chainSwap, chainToPsl, chainToPslBasic, faSize, faToTwoBit, mafToPsl, netChainSubset, netClass, netSyntenic, netToAxt, pslToChain
+```
+
 # Installation
 ## Download the latest released GageTracker version from github:
 ```
