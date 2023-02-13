@@ -8,10 +8,8 @@ protein_seq = "/home/chuand/new_gene/dm/dm.faa"
 
 outpath = "/home/chuand/new_gene/fangdata/dating3"
 
-#target = "/home/chuand/new_gene/fangdata/fasta/dmel.fasta"
 target = "/home/chuand/new_gene/fangdata/fasta/dm6_32.fasta"
 
-#annotation = "/home/chuand/new_gene/fangdata/dmel.gtf"
 annotation = "/home/chuand/new_gene/fangdata/dm6_32_108.gtf"
 
 
