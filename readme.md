@@ -1,15 +1,15 @@
 # Description
-GageTracker is a python package for dating gene age by micro- and macro- collinearity in a high speed and accuracy. It's can:
--  Data gene age according to phyostratigraphy
+GageTracker is a python package for dating gene age by micro- and macro-syteny with high speed and accuracy. It's can:
+-  Data gene age according to phylogeny
 -  Estimate the origination mechanism of new (young) genes
-- Run each command step-by-step, which facilitate to add new outgroup species without having to repeat the comparison of the previous aligned species, thus cab save more time
+- Run each command step-by-step, which facilitates to add of new outgroup species without having to repeat the comparison of the previously aligned species, thus can save more time
 - GageTracker can handle the comparison of large genomes by masking outgroup species and utilizing lastdb5 alignment
 - Easily add new reference genome RBH alignment without performing additional alignment that have done previously
 
 <img src="https://user-images.githubusercontent.com/45725241/202850768-d9fdc0a2-a9e6-4c13-a5a6-a296152e76d1.png" width="80%">
 
 # Dependencies
-All the dependencies (listed in the following table) should be pre-installed. The users need to add all the corresponding executable programs to environmental path before running GageTracker for dating gene age.
+All the dependencies (listed in the following table) should be pre-installed. The users need to add all the corresponding executable programs to the environmental path before running GageTracker for dating gene age.
 | Software | Links |
 | --- | --- |
 | python | Python >=3.8 |
@@ -27,7 +27,7 @@ All the dependencies (listed in the following table) should be pre-installed. Th
   cd GageTracker_XX && chmod 755 ./*
   export PATH=$PATH:/path/to/GageTracker
 ```
-## Install package gtfparse, pandas and biopython by typing the following command lines
+## Install package gtfparse, pandas, and biopython by typing the following command lines
 ```
 pip install gtfparse
 pip install pandas
@@ -36,9 +36,9 @@ pip install biopython
 
 #  Usage
 ## Prepare the users defined control file
-There are 9 necessary parameters in control file (ctl), which are used to designate the input annotation of target species, output path, the main branches and the reference genome list of each branch. To illustrate how to preparation the control file, we used the gene dating task of Drosophila melanogaster (D.melanogaster) as a case. In this example, there are total including 7 branches (from branch 0 to branch 6), and 12 Drosophila (Figure 1 from Zhang Y E et al. Genome research, 2010, 20(11): 1526-1533). The detailed parameters are listed in table 1, which totally contains three columns, the first is the required parameters, the second is an example to show how to set this parameter, and the final one is an explanation about the corresponding parameter.
+There are 9 necessary parameters in the control file (ctl), which are used to designate the input annotation of target species, output path, the main branches and the reference genome list of each branch. To illustrate how to prepare the control file, we used the gene dating task of Drosophila melanogaster (D.melanogaster) as a case. In this example, there  is a total including 7 branches (from branch 0 to branch 6), and 12 Drosophila (Figure 1 from Zhang Y E et al. Genome research, 2010, 20(11): 1526-1533). The detailed parameters are listed in table 1, which totally contains three columns, the first is the required parameters, the second is an example to show how to set this parameter, and the final one is an explanation of the corresponding parameter.
 
-![Tree](https://user-images.githubusercontent.com/45725241/202661978-5b76599b-e118-4f93-ba72-735686bfae6e.png "Tree for dating D.melanogaster. D.melanogaster is our target species and others are outgroup species (reference species). The tree showing here was cited from Zhang et al ")
+![Tree](https://user-images.githubusercontent.com/45725241/202661978-5b76599b-e118-4f93-ba72-735686bfae6e.png "Phylogeny tree used for dating gene age of D.melanogaster. D.melanogaster is our target species and others are outgroup species (reference species). The tree showing here was cited from Zhang et al ")
 
 The following table gives the detailed explanations for each of the parameters in user’s control file, in which the first column lists the necessary parameters, the second column lists the example for what value should be given and the final one gives its corresponding description.
 <html>
@@ -91,7 +91,7 @@ The following table gives the detailed explanations for each of the parameters i
   font-family:"Times New Roman",serif'>branch</span><span style='font-size:
   9.0pt'>”</span><span lang=EN-US style='font-size:9.0pt;font-family:"Times New Roman",serif'>
   is a python list type, which is used for designating the branch name. <span
-  style='color:red'>Please write the branch name from young to old. In this example
+  style='color:red'>Please label the branch name from old to young. In this example
   br6 represents the youngest branch and br0 represents the oldest branch.</span></span></p>
   </td>
  </tr>
@@ -135,11 +135,11 @@ The following table gives the detailed explanations for each of the parameters i
   none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
   background:#F2F2F2;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:4.65pt'><a name="OLE_LINK5"></a><a
-  name="OLE_LINK4"><span lang=EN-US style='font-size:9.0pt;font-family:"Times New Roman",serif'>The
+  name="OLE_LINK4"><span lang=EN-US style='font-size:9.0pt;font-family:"Times New Roman",serif'> (Target protein sequence) The
   parameter is a</span></a><span lang=EN-US style='font-size:9.0pt;font-family:
   "Times New Roman",serif'> python string type. This parameter specifies the
-  path of protein sequence (stored in fasta format). Please note that the sequence
-  names should be the same with their corresponding genes and the sequences are
+  path of the longest protein sequence of each gene (stored in fasta format). Please note that the sequence
+  names should be the same as their corresponding genes and the sequences are
   represented by the longest protein sequences. For example, gene g encodes two
   proteins: p1 and p2, among which p2 is the longest one, then the sequence
   should be organized as:</span></p>
@@ -166,7 +166,7 @@ The following table gives the detailed explanations for each of the parameters i
   none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:4.65pt'><span lang=EN-US
-  style='font-size:9.0pt;font-family:"Times New Roman",serif'>The parameter is
+  style='font-size:9.0pt;font-family:"Times New Roman",serif'>(output path) The parameter is
   a python string type. This parameter specifies the output of temporary files
   and gene age files</span></p>
   </td>
@@ -188,7 +188,7 @@ The following table gives the detailed explanations for each of the parameters i
   none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
   background:#F2F2F2;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:4.65pt'><span lang=EN-US
-  style='font-size:9.0pt;font-family:"Times New Roman",serif'>The parameter is
+  style='font-size:9.0pt;font-family:"Times New Roman",serif'>(Target genome) The parameter is
   a python string type. This parameter specifies the genome of our target
   species that we want to data gene age.</span></p>
   </td>
@@ -210,10 +210,10 @@ The following table gives the detailed explanations for each of the parameters i
   none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:4.65pt'><span lang=EN-US
-  style='font-size:9.0pt;font-family:"Times New Roman",serif'>The parameter is
+  style='font-size:9.0pt;font-family:"Times New Roman",serif'>(Target annotation) The parameter is
   a python string type. This parameter specifies the gene annotation of our
   target species (in gtf format). We have tested the annotation from Ensembl and
-  NCBI. All of these annotations work well.</span></p>
+  NCBI. All of these annotations work well.  Note: the GTF file should contain these features: gene, exon, and CDS in the third column.</span></p>
   </td>
  </tr>
  <tr>
@@ -251,15 +251,13 @@ The following table gives the detailed explanations for each of the parameters i
   none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
   background:#F2F2F2;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal align=left style='text-align:left'><span lang=EN-US
-  style='font-size:9.0pt;font-family:"Times New Roman",serif'>The parameter is
+  style='font-size:9.0pt;font-family:"Times New Roman",serif'>(Out-group species genomes) The parameter is
   a python dictionary type. This parameter designates the branch and its
   corresponding genome path. For example, branch br4 contains two species (Figure
   1) dere and dyak, which are stored in /path/to/fasta/. Therefore, the pair of
   key and values between br4 and its corresponding species should be written as
   reference[&quot;br4&quot;] = [&quot;/path/to/fasta/dere.fasta&quot;,
-  &quot;/path/to/fasta/dyak.fasta&quot;]. <span style='color:red'>Please note
-  that reference parameter should only contain the genome of outgroup species
-  with excluding the genome of our target species </span></span></p>
+  &quot;/path/to/fasta/dyak.fasta&quot;]. <span style='color:red'>Please note that reference parameter should only contain the genome of outgroup species excluding the genome of our target species. </span></span></p>
   </td>
  </tr>
  <tr>
@@ -281,20 +279,20 @@ The following table gives the detailed explanations for each of the parameters i
   style='font-size:9.0pt;font-family:"Times New Roman",serif'>The parameter is
   a python string type. This parameter specifies the file for storing gene age,
   which will be stored in the path designated by output parameter. In this
-  example, the final output is /home/chuand/new_gene/test_1.1/ dmel.age.</span></p>
+  example, the final output is /path/to/outpath/dmel.age.</span></p>
   </td>
  </tr>
  <tr>
   <td width=85 valign=top style='width:63.55pt;border:solid #BFBFBF 1.0pt;
   border-top:none;background:#F2F2F2;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal style='margin-bottom:4.65pt'><span lang=EN-US
-  style='font-size:9.0pt;font-family:"Times New Roman",serif'>votings</span></p>
+  style='font-size:9.0pt;font-family:"Times New Roman",serif'>voting</span></p>
   </td>
   <td width=236 valign=top style='width:177.2pt;border-top:none;border-left:
   none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
   background:#F2F2F2;padding:0cm 5.4pt 0cm 5.4pt'>
   <p class=MsoNormal align=left style='text-align:left'><span lang=EN-US
-  style='font-size:9.0pt;font-family:"Times New Roman",serif'>voting = 3</span></p>
+  style='font-size:9.0pt;font-family:"Times New Roman",serif'>voting = 0.5</span></p>
   </td>
   <td width=274 valign=top style='width:205.55pt;border-top:none;border-left:
   none;border-bottom:solid #BFBFBF 1.0pt;border-right:solid #BFBFBF 1.0pt;
@@ -302,7 +300,7 @@ The following table gives the detailed explanations for each of the parameters i
   <p class=MsoNormal align=left style='text-align:left'><span lang=EN-US
   style='font-size:9.0pt;font-family:"Times New Roman",serif'>The parameter is
   a python int type, which is used to determine whether a gene is present or
-  absent in outgroup species.</span></p>
+  absent in outgroup species(default is 0.5).</span></p>
   </td>
  </tr>
 </table>
@@ -321,9 +319,12 @@ GageTracker example.ctl [options]
         -mos        mask the outgroup species using windowmasker (default: NOT mask the outgroup species)
         -lg         align the large genome using lastal5 (default: lastal)
         -p          running the program in multi-processes
-        -m          infer the originating mechanism for young genes
+        -ao or -step1   only performs alignments and get the rbh alignment according to the outgroup species. 
+        -rbh or -step2  calculate the rBH regions by cosindering the genome alignment.
+        -da or -step3   only performs gene dating according to the ctl files.
+        -m          infer the originating mechanism for young genes (based on the BLASTp alignments)
 ```
-### Here is some examples
+### Several examples for running the command line
 ```
 # Dating gene age without masking outgroups genomes (for genome size <1 Gb)
 GageTracker dm.ctl
@@ -348,9 +349,13 @@ GageTracker dm.ctl -ao -mos -lg -p 5
 
 # Get the RBH alignments based on the genome alignments with 5 processes
 GageTracker dm.ctl -rbh -p 5
+or
+GageTracker dm.ctl -step2 -p 5
 
 # Get the gene age based on the results from the previous two steps (genome alignment and RBH results) with 5 processes
-GageTracker dm.ctl -da -p 5 
+GageTracker dm.ctl -da -p 5
+or
+GageTracker dm.ctl -step3 -p 5
 ```
 #  TIPs
 ## TIP1: add new whole genome alignment as reference
@@ -369,6 +374,8 @@ reference[“B1”] = [/home/chuand/new_gene/virilis/fasta/dbusckii.fasta]
 Then, perform the age dating procedure (the third stage) by typing the following, Noting that dvirilis.ctl contains the newly added reference species and the updated branch list.
 ```
 GageTracker dvirilis.ctl -da -p 5
+or
+GageTracker dvirilis.ctl -step3 -p 5
 ```
 ## Tip2: get the gene age of different gene type
 We provide a tool, gage_diff.py (get gene age of different annotation type), to filter gene age according to user’s needed. Just type the gene type according to the prompt message from the tool. Bellowing is an example
@@ -388,9 +395,11 @@ You can select the following gene type:
 
 Select the gene type listed above: lncRNA
 
-Your output is stored in /home/chuand/new_gene/test/test.age.lncRNA
+Your output is stored in the outpath that specifies in ctl.
 
 ```
 # Output
-The output contains four keys columns (Confidence, Branch, Chromosome and GeneMaskRatio) and several supplementary columns. In “Confidence”, CON means the alignment is not detected in sequencing gaps and NCON means the alignment is detected in sequencing gaps, therefore such genes marked by NCON should be considered as unreliable, which means that such genes are deemed as young genes not because it can not be found in out group species, but because of the sequencing quality.
+The output contains four key columns (Confidence, Branch, Chromosome and GeneMaskRatio) and several supplementary columns. In “Confidence”, CON means the alignment is not detected in sequencing gaps and NCON means the alignment is detected in sequencing gaps, therefore such genes marked by NCON should be considered as unreliable, which means that such genes are deemed as young genes not because it can not be found in out group species, but because of the sequencing quality.
 
+Reference&nbsp
+1. Zhang YE, Vibranovski MD, Krinsky BH et al. Age-dependent chromosomal distribution of male-biased genes in Drosophila, Genome Res 2010;20:1526-1533.
