@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+from alignM import *
+from rbhM import *
+import sys
+from datingM import *
+
+argvs = sys.argv
+process_num = 1
+if "-ct" in argvs:
+    ctrf= argvs[argvs.index("-ct") + 1]
+else:
+    print("Please use '-ct' to specify the control file")
+    sys.exit()
+
+reference={}
+ctr = open(ctrf).read(); exec(ctr); tfa = os.path.basename(target)
+masking, last, lastdb, psl, twoBit, size, chain, cleanChain, rBest, axt2maf, block, newfa = pathBuilt(outpath)
+exonbed = os.path.join(outpath, "exon.bed"); genebed = os.path.join(outpath, "gene.bed")
+iintervals = os.path.join(masking, tfa+".intervals")
+getInfo(annotation, exonbed, genebed)
+focalmask = os.path.join(outpath,"masking"); focalmask=os.path.join(focalmask, tfa+".mask")
+
+# reference need branch name and the reference genome path
+reference={}
+if "-add" in argvs:
+    ref_path = argvs[argvs.index("-add") + 1]
+    if "-br" not in argvs:
+        print("Please provide the branch name of the newly add reference genome")
+        sys.exit()
+    else:
+        br_name = argvs[argvs.index("-br") + 1]
+    reference[br_name] = [ref_path]
+else:
+    print("Please provide the newly add genome path")
+    sys.exit()
+
+if "-mos" in argvs:
+    reference = addPrefix(reference, newfa, process_num=process_num, mask="true")
+else:
+    reference = addPrefix(reference, newfa, process_num=process_num)
+
+focal_pre_mask, iintervals = repeatMasking(target, masking)
+focal_chr_size = get_focal_size(target, size)
+focalmask = mask_gene_ratio(iintervals, exonbed, focal_pre_mask, focal_chr_size)
+if "-lg" in argvs:
+    genomeAlignment(focalmask, reference, lastdb, last, threadNum=process_num, lg="true")
+else:
+    genomeAlignment(focalmask, reference, lastdb, last, threadNum=process_num)
+
+# 2. Only get the RBH result based on the results from first step
+tmp_reference = {}
+for i in reference:
+    items = reference[i]; tmp_reference[i]=[]
+    for j in items:
+        tmp_reference[i].append(os.path.join(newfa, os.path.basename(j)))
+reference = tmp_reference
+maf2axt(last,psl)
+faToTwoBit(focalmask, reference, twoBit, size)
+axtChain(psl, chain, twoBit, size, cleanChain, outpath, tfa)
+netting(cleanChain, size, tfa, twoBit, rBest, outpath)
+axtToMaf(rBest, size, tfa, axt2maf)
+
+print("Please add the following to your control file:")
+print("reference['{0}'] = ['{1}']".format(br_name, ref_path))
+print("If the reference genome belongs to a uncollected branch in branch parameter")
+print("*PLEASE ADD THE NEW BRANCH TO branch parameter!!!*")

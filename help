@@ -1,0 +1,28 @@
+GageTracker (Gene Age Tracker): A program for tracking gene age by macro- and micro- collinearity
+Version 1.3
+Usage:
+    GageTracker example.ctl [options] ...
+
+Options:
+    -h, --help     show all options and their default settings, and exit
+    -V, --version  show version information, and exit
+    -mos           mask the outgroup species using windowmasker (default: NOT mask the outgroup species)
+    -lg            align the large genome using lastal5 (default: lastal)
+    -p             running the program in multi-processes
+    -ao, -step1    only perform alignments and get the rbh alignment according to the outgroup species. The reference species will be considered withon "#" at the beganing of reference
+    -rbh or -step2  calculate the rBH regions by cosindering the genome alignment.
+    -da or -step3   only performs gene dating according to the ctl files.
+    -m          infer the originating mechanism for young genes (based on the BLASTp alignments)
+
+Examples:
+    GageTracker dm.ctl                  Dating gene age without masking outgroups genomes (for genome size <1 Gb)
+    GageTracker dm.ctl -m -p 12         Dating gene age and infer originating mechanism with 12 processes
+    GageTracker zebrafish.ctl -lg -p 2  Dating gene age without masking outgroups genomes (for genome size >1 Gb)
+    GageTracker human.ctl -lg -mos      Dating gene age with masking outgroups genomes (for large genome size ~3 Gb)
+    GageTracker dm.ctl -ao -mos         Only run the genome alignment with masking the outgroup species
+    GageTracker dm.ctl -rbh -p 5        Get the RBH alignments based on the genome alignments with 5 processes
+    GageTracker dm.ctl -da -p 5         Get the gene age based on the results from the previous two steps (genome alignment and RBH results) with 5 processes
+    More details about the examples, please refer to https://github.com/RiversDong/GageTracker
+    
+
+Please refer to https://github.com/RiversDong/GageTracker/blob/main/dm.ctl for the basic format of user defined control file.
