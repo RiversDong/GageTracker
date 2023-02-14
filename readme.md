@@ -36,9 +36,9 @@ axtChain, axtSort, axtToMaf, axtToPsl, chainCleaner, chainFilter, chainNet, chai
 ```
 ## Install package gtfparse, pandas, and biopython by typing the following command lines
 ```
-pip install gtfparse
-pip install pandas
-pip install biopython
+pip install gtfparse==1.2.1
+pip install pandas==1.4.3
+pip install biopython==1.79
 ```
 
 #  Usage
