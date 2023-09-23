@@ -34,11 +34,12 @@ netChainSubset, netSyntenic, netToAxt, pslToChain
 
 ## 2.2. Download the latest released GageTracker version from github:
 ```
-  git clone https://github.com/xxxx/GageTracker_XX
-  tar xzf GageTracker_XX.tar.gz
-  cd GageTracker_XX && chmod 755 ./*
+  git clone https://github.com/RiversDong/GageTracker.git
+  cd GageTracker && chmod 755 ./*
   export PATH=$PATH:/path/to/GageTracker
 ```
+/path/to/GageTracker is the path of unziped GageTracker file that downloaded by git clone https://github.com/RiversDong/GageTracker.git
+
 ## 2.3. Install package gtfparse, pandas, and biopython by typing the following command lines
 ```
 pip install gtfparse==1.2.1
