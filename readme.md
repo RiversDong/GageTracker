@@ -1,4 +1,4 @@
-# About GageTracker
+# 1. About GageTracker
 GageTracker is a python package for dating gene age by micro- and macro-syteny with high speed and accuracy. It's can:
 -  Data gene age according to phylogeny
 - Run each command step-by-step, which facilitates to add of new outgroup species without having to repeat the comparison of the previously aligned species, thus can save more time
@@ -9,7 +9,9 @@ GageTracker is a python package for dating gene age by micro- and macro-syteny w
 <img src="https://github.com/RiversDong/GageTracker/assets/45725241/b3fff6d1-4f31-4235-968b-bd25e2f88827" width="80%" height="80%">
 
 
-# Dependencies
+# 2. Installation
+
+## 2.1. Dependencies
 All the dependencies (listed in the following table) should be pre-installed. The users need to add all the corresponding executable programs to the environmental path before running GageTracker for dating gene age.
 | Software | Links |
 | --- | --- |
@@ -27,23 +29,22 @@ axtChain, axtSort, axtToMaf, axtToPsl, chainCleaner, chainFilter, chainNet, chai
 ```
 **Please note that all dependencies must be added to the environment path before using GageTracker!!**
 
-# Installation
-## Download the latest released GageTracker version from github:
+## 2.2. Download the latest released GageTracker version from github:
 ```
   git clone https://github.com/xxxx/GageTracker_XX
   tar xzf GageTracker_XX.tar.gz
   cd GageTracker_XX && chmod 755 ./*
   export PATH=$PATH:/path/to/GageTracker
 ```
-## Install package gtfparse, pandas, and biopython by typing the following command lines
+## 2.3. Install package gtfparse, pandas, and biopython by typing the following command lines
 ```
 pip install gtfparse==1.2.1
 pip install pandas==1.4.3
 pip install biopython==1.79
 ```
 
-#  Usage
-## Prepare the users defined control file
+# 3. Usage
+## 3.1. Prepare the users defined control file
 There are 9 necessary parameters in the control file (ctl), which are used to designate the input annotation of target species, output path, the main branches and the reference genome list of each branch. To illustrate how to prepare the control file, we used the gene dating task of Drosophila melanogaster (D.melanogaster) as a case. In this example, there  is a total including 7 branches (from branch 0 to branch 6), and 12 Drosophila (Figure 1 from Zhang Y E et al. Genome research, 2010, 20(11): 1526-1533). The detailed parameters are listed in table 1, which totally contains three columns, the first is the required parameters, the second is an example to show how to set this parameter, and the final one is an explanation of the corresponding parameter.
 
 ![Tree](https://user-images.githubusercontent.com/45725241/202661978-5b76599b-e118-4f93-ba72-735686bfae6e.png "Phylogeny tree used for dating gene age of D.melanogaster. D.melanogaster is our target species and others are outgroup species (reference species). The tree showing here was cited from Zhang et al ")
@@ -317,7 +318,7 @@ The following table gives the detailed explanations for each of the parameters i
 </body>
 </html>
 
-##  Running the program after preparing the user-defined control file
+## 3.2. Running the program after preparing the user-defined control file
 ### The basic command
 ```
 GageTracker example.ctl [options]
@@ -365,8 +366,8 @@ GageTracker dm.ctl -da -p 5
 or
 GageTracker dm.ctl -step3 -p 5
 ```
-#  TIPs
-## TIP1: add new whole genome alignment as reference
+# 4. TIPs
+## 4.1. TIP1: add new whole genome alignment as reference
 We have provided a toolkit (addaln), which allow users add a new reference genome without performing additional alignments that have done. Just typing the following, a new RBH alignment will be done
 ```
 addaln -add /home/chuand/new_gene/virilis/fasta/dbusckii.fasta -br B1 -ct dvirilis.ctl
@@ -385,7 +386,7 @@ GageTracker dvirilis.ctl -da -p 5
 or
 GageTracker dvirilis.ctl -step3 -p 5
 ```
-## Tip2: get the gene age of different gene type
+## 4.2. Tip2: get the gene age of different gene type
 We provide a tool, gage_diff.py (get gene age of different annotation type), to filter gene age according to user’s needed. Just type the gene type according to the prompt message from the tool. Bellowing is an example
 ```
 gage_diff.py test.ctl
@@ -406,7 +407,7 @@ Select the gene type listed above: lncRNA
 Your output is stored in the outpath that specifies in ctl.
 
 ```
-# Output
+# 5. Output
 The output contains four key columns (Confidence, Branch, Chromosome and GeneMaskRatio) and several supplementary columns. In “Confidence”, CON means the alignment is not detected in sequencing gaps and NCON means the alignment is detected in sequencing gaps, therefore such genes marked by NCON should be considered as unreliable, which means that such genes are deemed as young genes not because it can not be found in out group species, but because of the sequencing quality.
 
 #  References
