@@ -1,11 +1,12 @@
-# Description
+# About GageTracker
 GageTracker is a python package for dating gene age by micro- and macro-syteny with high speed and accuracy. It's can:
 -  Data gene age according to phylogeny
 - Run each command step-by-step, which facilitates to add of new outgroup species without having to repeat the comparison of the previously aligned species, thus can save more time
 - GageTracker can handle the comparison of large genomes by masking outgroup species and utilizing lastdb5 alignment
 - Easily add new reference genome RBH alignment without performing additional alignment that have done previously
 
-<img src="https://user-images.githubusercontent.com/45725241/202850768-d9fdc0a2-a9e6-4c13-a5a6-a296152e76d1.png" width="80%">
+![image](https://github.com/RiversDong/GageTracker/assets/45725241/b3fff6d1-4f31-4235-968b-bd25e2f88827)
+
 
 # Dependencies
 All the dependencies (listed in the following table) should be pre-installed. The users need to add all the corresponding executable programs to the environmental path before running GageTracker for dating gene age.
