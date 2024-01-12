@@ -411,8 +411,13 @@ Select the gene type listed above: lncRNA
 Your output is stored in the outpath that specifies in ctl.
 
 ```
+The above example will give the gene age list of lncRNA, which stored in the path specified by ctl file. In the same way, users can also choose the age of protein-coding genes from the annotation results. Noting that the results is filtered by repeat sequences ratio among the total exon length of a gene. 
+
 # 5. Output
 The output contains four key columns (Confidence, Branch, Chromosome and GeneMaskRatio) and several supplementary columns. In “Confidence”, CON means the alignment is not detected in sequencing gaps and NCON means the alignment is detected in sequencing gaps, therefore such genes marked by NCON should be considered as unreliable, which means that such genes are deemed as young genes not because it can not be found in out group species, but because of the sequencing quality.
 
 #  References
 1. Zhang YE, Vibranovski MD, Krinsky BH et al. Age-dependent chromosomal distribution of male-biased genes in Drosophila, Genome Res 2010;20:1526-1533.
+2. Shao Y, Chen C, Shen H, et al. GenTree, an integrated resource for analyzing the evolution and function of primate-specific coding genes[J]. Genome research, 2019, 29(4): 682-696.
+3. Fang CC#, Dong C# et al. GageTracker: a tool for dating gene age by micro- and macro-synteny with high speed and accuracy (unpublish)
+4. Dong C, Zhang L, Xia S, et al. New gene evolution with subcellular expression patterns detected in PacBio-sequenced genomes of Drosophila genus[J]. bioRxiv, 2022: 2022.11. 30.518489.
