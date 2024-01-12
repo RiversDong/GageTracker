@@ -419,5 +419,5 @@ The output contains four key columns (Confidence, Branch, Chromosome and GeneMas
 #  References
 1. Zhang YE, Vibranovski MD, Krinsky BH et al. Age-dependent chromosomal distribution of male-biased genes in Drosophila, Genome Res 2010;20:1526-1533.
 2. Shao Y, Chen C, Shen H, et al. GenTree, an integrated resource for analyzing the evolution and function of primate-specific coding genes[J]. Genome research, 2019, 29(4): 682-696.
-3. Fang CC#, Dong C# et al. GageTracker: a tool for dating gene age by micro- and macro-synteny with high speed and accuracy (unpublish)
+3. Fang CC#, Dong C# et al. GageTracker: a tool for dating gene age by micro- and macro-synteny with high speed and accuracy (unpublished article)
 4. Dong C, Zhang L, Xia S, et al. New gene evolution with subcellular expression patterns detected in PacBio-sequenced genomes of Drosophila genus[J]. bioRxiv, 2022: 2022.11. 30.518489.
