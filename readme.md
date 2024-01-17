@@ -416,11 +416,11 @@ The above example will give the gene age list of lncRNA, which stored in the pat
 # 5. Output
 The output contains four key columns (Confidence, Branch, Chromosome and GeneMaskRatio) and several supplementary columns. In “Confidence”, CON means the alignment is not detected in sequencing gaps and NCON means the alignment is detected in sequencing gaps, therefore such genes marked by NCON should be considered as unreliable, which means that such genes are deemed as young genes not because it can not be found in out group species, but because of the sequencing quality.
 
-# Some error messages and solutions
-* ERROR NetFilterNonNested.perl (comes with the chaincleaner source code) is not a binary in sPATH, Either install it or provide the nets as input
+# 6. Some error messages and solutions
+* ERROR NetFilterNonNested.perl (comes with the chaincleaner source code) is not a binary in sPATH, Either install it or provide the nets as input   
 Please download NetFilterNonNested.perl from https://github.com/hillerlab/GenomeAlignmentTools/blob/master/src/NetFilterNonNested.perl, then move this script to your PATH and grant it executable permissions.
 
-* gene.bed file is empty
+* gene.bed file is empty    
 Check the GTF file to ensure it includes the "gene" feature. If the file lacks the "gene" feature, GageTracker won't be able to extract position information, as it relies on the presence of the "gene" keyword in the feature columns.
 
 #  References
