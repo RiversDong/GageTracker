@@ -20,9 +20,10 @@ All the dependencies (listed in the following table) should be pre-installed. Th
 | tantan | https://gitlab.com/mcfrith/tantan |
 | bedtools | https://github.com/arq5x/bedtools2/releases |
 | maf2synteny | https://github.com/fenderglass/maf2synteny |
-| windowmasker | https://github.com/goeckslab/WindowMasker |
+| ~~windowmasker~~ | ~~https://github.com/goeckslab/WindowMasker~~ |
 | BLAST toolkit | ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ |
 
+WindowMasker is a subprogram of BLAST+, so it does not need to be installed separately.
 And the UCSC tools are also needed, please downloaded these tools from http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/.
 ```
 axtChain, axtSort, axtToMaf, axtToPsl, chainCleaner,
