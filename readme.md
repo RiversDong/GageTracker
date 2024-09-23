@@ -22,6 +22,7 @@ All the dependencies (listed in the following table) should be pre-installed. Th
 | maf2synteny | https://github.com/fenderglass/maf2synteny |
 | ~~windowmasker~~ | ~~https://github.com/goeckslab/WindowMasker~~ |
 | BLAST toolkit | ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ |
+| bedtools (v2.29.2) | https://github.com/arq5x/bedtools2/releases |
 
 WindowMasker is a subprogram of BLAST+, so it does not need to be installed separately.
 And the UCSC tools are also needed, please downloaded these tools from http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/.
