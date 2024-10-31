@@ -333,7 +333,7 @@ GageTracker example.ctl [options]
         -V         -version show version information, and exit
         -mos        mask the outgroup species using windowmasker (default: NOT mask the outgroup species)
         -lg         align the large genome using lastal5 (default: lastal)
-        -p          running the program in multi-processes
+        -p          running the program in multi-processes. By default, GageTracker uses 6 threads when calling lastal. The -p parameter specifies the number of processes for genome alignment, with each process representing a pair of genome alignment tasks and utilizing 6 threads during alignment. Therefore, when GageTracker is run with -p 6, it initiates 6 processes for genome alignment, each using 6 threads, resulting in a total of 36 threads (6 * 6 = 36) actively performing genome alignment.
         -ao or -step1   only performs alignments and get the rbh alignment according to the outgroup species. 
         -rbh or -step2  calculate the rBH regions by cosindering the genome alignment.
         -da or -step3   only performs gene dating according to the ctl files.
