@@ -427,6 +427,10 @@ Please download NetFilterNonNested.perl from https://github.com/hillerlab/Genome
 * gene.bed file is empty    
 Check the GTF file to ensure it includes the "gene" feature. If the file lacks the "gene" feature, GageTracker won't be able to extract position information, as it relies on the presence of the "gene" keyword in the feature columns.
 
+# Bug fix
+* Sorted input specified, but the file xxxx has the following record with a different sort order than the genomeFile xxx
+This error was discovered by Diego Safian, and we appreciate this feedback. The issue has been recently fixed.
+
 #  References
 1. Zhang YE, Vibranovski MD, Krinsky BH et al. Age-dependent chromosomal distribution of male-biased genes in Drosophila, Genome Res 2010;20:1526-1533.
 2. Shao Y, Chen C, Shen H, et al. GenTree, an integrated resource for analyzing the evolution and function of primate-specific coding genes[J]. Genome research, 2019, 29(4): 682-696.
