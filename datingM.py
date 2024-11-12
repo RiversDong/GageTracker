@@ -86,6 +86,10 @@ def blockGene(axt2maf, block, alignment_file, tarchrsize, gene_bed):
     '''
     deal with block gene functions
     '''
+
+    sort_cmd = f"sort -t$'\t' -k1,1 {tarchrsize} -o {tarchrsize}"
+    os.system(sort_cmd)
+    
     data = pd.read_csv(tarchrsize, sep="\t", header=None); tarchrs = list(data[0]); mafs = os.listdir(axt2maf)
     pd_gap_species = pd.DataFrame()
     f = open(gene_bed).read().split("\n"); genes = [i.split("\t")[3] for i in f if i!=""]
