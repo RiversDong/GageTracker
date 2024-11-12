@@ -428,7 +428,7 @@ Please download NetFilterNonNested.perl from https://github.com/hillerlab/Genome
 Check the GTF file to ensure it includes the "gene" feature. If the file lacks the "gene" feature, GageTracker won't be able to extract position information, as it relies on the presence of the "gene" keyword in the feature columns.
 
 # Bug fix
-* Sorted input specified, but the file xxxx has the following record with a different sort order than the genomeFile xxx
+* Sorted input specified, but the file xxxx has the following record with a different sort order than the genomeFile xxx   
 This error was discovered by Diego Safian, and we appreciate this feedback. The issue has been recently fixed.
 
 #  References
