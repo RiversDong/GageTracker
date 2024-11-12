@@ -1,3 +1,5 @@
+# 0. Items to note in advance
+Please ensure that the chromosome IDs in your GTF annotation files are consistent with those in your genome FASTA files. This is a critical step to avoid any mismatches that could lead to errors in subsequent analysis or processing steps.
 # 1. About GageTracker
 GageTracker is a python package for dating gene age by micro- and macro-syteny with high speed and accuracy. It's can:
 -  Data gene age according to phylogeny
