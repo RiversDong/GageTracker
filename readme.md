@@ -431,6 +431,16 @@ Check the GTF file to ensure it includes the "gene" feature. If the file lacks t
 * Sorted input specified, but the file xxxx has the following record with a different sort order than the genomeFile xxx   
 This error was discovered by Diego Safian, and we appreciate this feedback. The issue has been recently fixed.
 
+# Data Availability
+
+We performed age dating of *D. melanogaster* based on 17 outgroup species using GageTracker (MBE, 2025: msaf038). During the procedure, two important intermediate files were generated. One is the genome `.net.axt` file, and the other is the genome alignment block file (calculated using `maf2synteny`). 
+
+Both intermediate files can be accessed via the following links:
+
+- `.net.axt` file: [https://drive.google.com/file/d/1G05rojjx8YnIFy1IbFA5i47Pk3mzTo41/view?usp=drive_link](https://drive.google.com/file/d/1G05rojjx8YnIFy1IbFA5i47Pk3mzTo41/view?usp=drive_link)  
+- Alignment block file: [https://drive.google.com/file/d/1sH5DgCXXbQNgFLJydSMsio83yjyBqUG_/view?usp=sharing](https://drive.google.com/file/d/1sH5DgCXXbQNgFLJydSMsio83yjyBqUG_/view?usp=sharing)
+
+
 #  References
 1. Zhang YE, Vibranovski MD, Krinsky BH et al. Age-dependent chromosomal distribution of male-biased genes in Drosophila, Genome Res 2010;20:1526-1533.
 2. Shao Y, Chen C, Shen H, et al. GenTree, an integrated resource for analyzing the evolution and function of primate-specific coding genes[J]. Genome research, 2019, 29(4): 682-696.
