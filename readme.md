@@ -448,3 +448,4 @@ This error was discovered by Diego Safian, and we appreciate this feedback. The 
 2. Shao Y, Chen C, Shen H, et al. GenTree, an integrated resource for analyzing the evolution and function of primate-specific coding genes[J]. Genome research, 2019, 29(4): 682-696.
 3. Fang CC#, Dong C# et al. GageTracker: a tool for dating gene age by micro- and macro-synteny with high speed and accuracy (unpublished article)
 4. Dong C, Zhang L, Xia S, et al. New gene evolution with subcellular expression patterns detected in PacBio-sequenced genomes of Drosophila genus[J]. bioRxiv, 2022: 2022.11. 30.518489.
+5. Dong C, Xia S, Zhang L, et al. Subcellular enrichment patterns of new genes in Drosophila evolution[J]. Molecular Biology and Evolution, 2025, 42(2): msaf038.
