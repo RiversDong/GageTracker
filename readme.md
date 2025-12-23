@@ -27,7 +27,7 @@ All the dependencies (listed in the following table) should be pre-installed. Th
 | bedtools (v2.29.2) | https://github.com/arq5x/bedtools2/releases |
 
 WindowMasker is a subprogram of BLAST+, so it does not need to be installed separately.
-And the UCSC tools are also needed, please downloaded these tools from http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/.
+And the UCSC tools are also needed, please downloaded these tools from The UCSC related tools can be downloaded at https://drive.google.com/file/d/1q2OkLHu0jZmCVtx41XqBhuKB9o3gYE2V/view?usp=sharing.
 ```
 axtChain, axtSort, axtToMaf, axtToPsl, chainCleaner,
 chainFilter, chainNet, chainPreNet, chainSort, chainStitchId,     
