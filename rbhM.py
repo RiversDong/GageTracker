@@ -2,6 +2,8 @@
 
 import os
 from multiprocessing import Pool
+import subprocess
+
 
 def maf2axt(last, psl):
     mafs = os.listdir(last)
@@ -30,33 +32,48 @@ def faToTwoBit(focal_mask, reference, bit, size):
         cmd = "faSize {0} -detailed -tab | sort -k1 > {1}".format(infasta, isize)
         os.system(cmd)
 
-def axtChain(psl, chain, twoBit, size, cleanChian, output, target=""):
+
+def run_command(cmd):
+    try:
+        result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(result.stdout.decode())
+    except subprocess.CalledProcessError as e:
+        print("Error executing command:", e.cmd)
+        print("Return code:", e.returncode)
+        print("Output:", e.stdout.decode())
+        print("Error:", e.stderr.decode())
+
+def axtChain(psl, chain, twoBit, size, cleanChain, output, target=""):
     target = target+".2bit"
     targetTwobit = os.path.join(twoBit, target)
     tmp_psld = os.listdir(psl)
     psl_num = len(tmp_psld); threadNum = psl_num if psl_num <= 5 else 5
-    po = Pool(psl_num)
+    po = Pool(threadNum)
     print("Step V: chaining process...")
     for inpsl in tmp_psld:
         outchain = os.path.join(chain, inpsl.replace(".maf.psl","")+".chain")
         queryTwobit = os.path.join(twoBit, inpsl.replace(".maf.psl","")+".2bit")
-        inpsl = os.path.join(psl, inpsl)
-        cmd = "axtChain -linearGap=loose {0} {1} {2} {3} &>/dev/null".format(inpsl, targetTwobit, queryTwobit, outchain)
+        inpsl_path = os.path.join(psl, inpsl)
+        cmd = f"axtChain -linearGap=loose {inpsl_path} {targetTwobit} {queryTwobit} {outchain} &>/dev/null"
         print(cmd)
-        po.apply_async(os.system,(cmd,))
+        po.apply_async(run_command, (cmd,))
     po.close(); po.join()
+    
     print("Step VI: chain clean...")
     chains = os.listdir(chain)
     tSizes = os.path.join(size, target.replace(".2bit","")+".chrom.sizes")
     t2bit = os.path.join(twoBit, target.replace(".2bit","")+".2bit")
     for i in chains:
         inchain = os.path.join(chain,i)
-        outchain = os.path.join(cleanChian, i.replace(".chain","")+".chain.clean")
+        outchain = os.path.join(cleanChain, i.replace(".chain","")+".chain.clean")
         qSize = os.path.join(size, i.replace(".chain","")+".chrom.sizes")
         q2bit = os.path.join(twoBit, i.replace(".chain","")+".2bit")
         removedSuspects = os.path.join(output+".removedSuspects.bed")
-        cmd = "chainCleaner {0} -tSizes={1} -qSizes={2} {3} {4} {5} {6} -linearGap=loose".format(inchain, tSizes, qSize, t2bit, q2bit, outchain, removedSuspects)
-        os.system(cmd)
+        cmd = f"chainCleaner {inchain} -tSizes={tSizes} -qSizes={qSize} {t2bit} {q2bit} {outchain} {removedSuspects} -linearGap=loose"
+        run_command(cmd)
+
+# Example usage
+# axtChain(psl, chain, twoBit, size, cleanChain, output, target)
 
 #def netting(cleanChain, size, target, twoBit, rBest):
 def netting(cleanChain, size, target, twoBit, rBest, outpath):

@@ -9,6 +9,8 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import subprocess
 
+
+
 def pathBuilt(outpath):
     masking = os.path.join(outpath, "masking")
     if not os.path.exists(masking):
@@ -269,7 +271,7 @@ def genomeAlignment(focalmask, reference, dbpath, last, threadNum=5, lg="false")
         print("  IV.2 whole genome alignment between reference and focus in {} processes".format(threadNum))
         for i in reference_mask:
             ibase = os.path.basename(i);iout = os.path.join(last, ibase+".maf")
-            cmd = "lastal5 -P 6 -C2 -u0 -m50 -p HOXD70 {0} {1} > {2}".format(dbname,i, iout)
+            cmd = "lastal5 -P 6 -C2 -u0 -m25 -p HOXD70 {0} {1} > {2}".format(dbname,i, iout)
             po.apply_async(os.system,(cmd, ))
         po.close(); po.join()
     else:
@@ -279,7 +281,7 @@ def genomeAlignment(focalmask, reference, dbpath, last, threadNum=5, lg="false")
         print("  IV.2 whole genome alignment between reference and focus in {} processes".format(threadNum))
         for i in reference_mask:
             ibase = os.path.basename(i);iout = os.path.join(last, ibase+".maf")
-            cmd = "lastal -P 6 -C2 -u0 -m50 -p HOXD70 {0} {1} > {2}".format(dbname,i, iout)
+            cmd = "lastal -P 6 -C2 -u0 -m25 -p HOXD70 {0} {1} > {2}".format(dbname,i, iout)
             po.apply_async(os.system,(cmd, ))
         po.close(); po.join()
 

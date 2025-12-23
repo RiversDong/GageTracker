@@ -1,10 +1,23 @@
 #!/usr/bin/env python3
+import warnings
+import logging
+from pathlib import Path
+
+# remove the warning information except for the fatal error
+logging.getLogger('root').setLevel(logging.CRITICAL)
+warnings.filterwarnings("ignore")
+logging.basicConfig(level=logging.ERROR)
+logging.getLogger("numexpr").setLevel(logging.ERROR)
+logging.getLogger("root").setLevel(logging.ERROR)
 
 import sys
 argvs = sys.argv
 if "--tantannomsk" in argvs:
     # DO NOT handle the ref genome by tantan
     from alignM_ori import *
+elif "-M25" in argvs:
+    # align genome with lastal -m25 (maximum initial matches per query position)
+    from alignM_m25 import *
 else:
     # handle the ref genome by tantan at the default
     from alignM import *
@@ -12,8 +25,6 @@ else:
 from rbhM import *
 from datingM import *
 from mechanism_rbh1 import *
-
-
 
 '''
 Python script to annotate gene age
@@ -30,7 +41,14 @@ if "-p" in argvs:
     p_index = argvs.index("-p")
     process_num = int(argvs[p_index+1])
 reference={}
+
 ctrf = sys.argv[1]; ctr = open(ctrf).read(); exec(ctr); tfa = os.path.basename(target)
+
+# -- Create the output directory if the output path does not exist --
+outpath = Path(outpath)                                             #
+outpath.mkdir(parents=True, exist_ok=True)                          #
+# -- Create the output directory if the output path does not exist --
+
 masking, last, lastdb, psl, twoBit, size, chain, cleanChain, rBest, axt2maf, block, newfa = pathBuilt(outpath)
 exonbed = os.path.join(outpath, "exon.bed"); genebed = os.path.join(outpath, "gene.bed")
 iintervals = os.path.join(masking, tfa+".intervals")

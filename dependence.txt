@@ -1,0 +1,11 @@
+bioconda::last
+bioconda::blast
+bioconda::tantan
+bioconda::maf2synteny
+bioconda::gtfparse
+bioconda::bedtools
+anaconda::pandas
+conda-forge::biopython
+numpy==1.26.4
+pandas
+pybedtools

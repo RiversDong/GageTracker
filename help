@@ -1,5 +1,5 @@
 GageTracker (Gene Age Tracker): A program for tracking gene age by macro- and micro- collinearity
-Version 1.3
+Version 1.1
 Usage:
     GageTracker example.ctl [options] ...
 
@@ -12,8 +12,8 @@ Options:
     -ao, -step1    only perform alignments and get the rbh alignment according to the outgroup species. The reference species will be considered withon "#" at the beganing of reference
     -rbh or -step2  calculate the rBH regions by cosindering the genome alignment.
     -da or -step3   only performs gene dating according to the ctl files.
-    -m          infer the originating mechanism for young genes (based on the BLASTp alignments)
-
+    -m            infer the originating mechanism for young genes (based on the BLASTp alignments)
+    -M25          align genome with lastal -m25 (maximum initial matches per query position)
 Examples:
     GageTracker dm.ctl                  Dating gene age without masking outgroups genomes (for genome size <1 Gb)
     GageTracker dm.ctl -m -p 12         Dating gene age and infer originating mechanism with 12 processes

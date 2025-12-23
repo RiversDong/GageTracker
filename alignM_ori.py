@@ -89,6 +89,7 @@ def addPrefix(refDic, newFaPath, process_num=1, mask="false"):
             for j in refs:
                 window_tmp = j+".tmp"
                 window_mask=j+".w"
+                #我换了一下路径
                 cmd1 = "windowmasker -mk_counts -in {0} -infmt fasta -out {1} -sformat obinary &> /dev/null".format(j, window_tmp); cmd1_list.append(cmd1)
                 cmd2 = "windowmasker -ustat {0} -in {1} -out {2} -outfmt fasta".format(window_tmp,j,window_mask); cmd2_list.append(cmd2)
                 new_reference_mask[i].append(window_mask)
@@ -101,7 +102,6 @@ def addPrefix(refDic, newFaPath, process_num=1, mask="false"):
                 wfile = j + ".w"
                 os.remove(j);
                 os.rename(wfile, j)
-        print(new_reference)
         return new_reference
     else:
         return new_reference

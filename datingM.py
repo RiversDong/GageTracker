@@ -5,6 +5,8 @@ import os
 import re
 import pandas as pd
 from pandas import Series
+import polars as pl
+import subprocess
 
 def gene_mask_ratio(exon_bed, mask_interval):
     exon_f = open(exon_bed).read().split("\n")[0:-1]
@@ -69,39 +71,67 @@ def codeName(tid, codefor):
                 chrId.append(j+"_"+str(gindex)); gindex+=1
         return chrId
 
-def getInfo(gtf, exonBed, geneBed):
-    df = read_gtf(gtf); columns = ["seqname", "start", "end", "transcript_id", "gene_id"]
-    exonInfo = df[df["feature"] == "exon"].loc[:,columns]
-    exonLen = exonInfo["end"]-exonInfo["start"]; exonInfo['exonLen']=exonLen; tlen=[]
-    t2len = exonInfo.groupby("transcript_id")["exonLen"].sum(); tids = exonInfo["transcript_id"]
-    exonId = codeName(tids, "exon"); exonInfo["exonId"]=exonId
-    tLenList = [t2len[i] for i in tids]; exonInfo['tlen'] = tLenList
-    out_column = ["seqname", "start", "end", "transcript_id", "gene_id", "exonId", "tlen"]
-    exonInfo.loc[:,out_column].to_csv(exonBed, sep="\t", index=False, header=0)
 
-    geneInfo = df[df["feature"] == "gene"]
-    geneInfo.loc[:,["seqname","start","end","gene_id"]].to_csv(geneBed, sep="\t", index=False, header=0)
+def getInfo(gtf, exonBed, geneBed):
+    # 使用 gtfparse 解析 GTF 文件
+    df_pandas = read_gtf(gtf)
+
+    # 提取所需的列
+    required_columns = ["seqname", "start", "end", "transcript_id", "gene_id", "feature"]
+    df_pandas = df_pandas[required_columns]
+
+    # 转换为 Polars DataFrame
+    df = pl.DataFrame(df_pandas)
+
+    # 处理 exon 信息
+    exonInfo = df.filter(df["feature"] == "exon")
+    exonInfo = exonInfo.with_columns(
+        (exonInfo["end"] - exonInfo["start"]).alias("exonLen")
+    )
+
+    # 计算每个 transcript 的外显子长度总和
+    t2len = exonInfo.groupby("transcript_id").agg(pl.sum("exonLen").alias("tlen"))
+
+    # 添加 exonId
+    tids = exonInfo["transcript_id"].to_list()
+    exonId = codeName(tids, "exon")  # 使用现有的 codeName 函数
+    exonInfo = exonInfo.with_columns(pl.Series(exonId).alias("exonId"))
+
+    # 合并 transcript 长度信息
+    exonInfo = exonInfo.join(t2len, on="transcript_id", how="left")
+
+    # 保存 exon 信息到输出文件
+    out_columns = ["seqname", "start", "end", "transcript_id", "gene_id", "exonId", "tlen"]
+    exonInfo.select(out_columns).write_csv(exonBed, separator="\t", has_header=False)
+
+    # 处理 gene 信息
+    geneInfo = df.filter(df["feature"] == "gene")
+    geneInfo.select(["seqname", "start", "end", "gene_id"]).write_csv(
+        geneBed, separator="\t", has_header=False
+    )
+
+
     
 def blockGene(axt2maf, block, alignment_file, tarchrsize, gene_bed):
     '''
     deal with block gene functions
     '''
-
-    sort_cmd = f"sort -t$'\t' -k1,1 {tarchrsize} -o {tarchrsize}"
-    os.system(sort_cmd)
-    
     data = pd.read_csv(tarchrsize, sep="\t", header=None); tarchrs = list(data[0]); mafs = os.listdir(axt2maf)
     pd_gap_species = pd.DataFrame()
     f = open(gene_bed).read().split("\n"); genes = [i.split("\t")[3] for i in f if i!=""]
     pd_gap_species["gene"] = genes
     gapGeneOut = os.path.join(block, "gene.gap")
+
     for i in mafs:
-        # get the coarse-grained synteny blocks via maf2synteny
-        # result is stored in outpath/block/ifasta_f
-        inmaf = os.path.join(axt2maf, i); ifasta_f = i.replace(".maf", "")
-        iblock = os.path.join(block , ifasta_f)
-        cmd = "maf2synteny -o {} -b 100 -s {} {} &> /dev/null".format(iblock, alignment_file, inmaf)
-        os.system(cmd)
+        inmaf = os.path.join(axt2maf, i)
+        ifasta_f = i.replace(".maf", "")
+        iblock = os.path.join(block, ifasta_f)
+        cmd = ["maf2synteny", "-o", iblock, "-b", "100", "-s", alignment_file, inmaf]
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode != 0:
+            print("Error executing maf2synteny command:")
+            print(result.stderr)
+            continue  # 或者根据需要处理错误
 
         # calculate the gap gene list for reference ifasta_f
         coord = os.path.join(iblock, "100"); coord = os.path.join(coord, "blocks_coords.txt")
@@ -224,7 +254,8 @@ def dating(block, gene_bed, reference, branch, outpath, agefile, voting, gene2ra
         brBreakPd[i]=breaksum
     #--test
     #brBreakPd.to_csv("del", sep="\t", index=False)
-    pd_gene2present.to_csv("homo.table", sep="\t", index=False)
+    homo_table_path = os.path.join(outpath, "homo.table")
+    pd_gene2present.to_csv(homo_table_path, sep="\t", index=False)
     #--
     geneindex = range(0, len(genes))
     refBrNum = len(branch)-1
