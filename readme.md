@@ -8,7 +8,8 @@ GageTracker is a python package for dating gene age by micro- and macro-syteny w
 - Easily add new reference genome RBH alignment without performing additional alignment that have done previously
 
 
-<img src="https://github.com/RiversDong/GageTracker/assets/45725241/b3fff6d1-4f31-4235-968b-bd25e2f88827" width="80%" height="80%">
+![fig2](https://github.com/user-attachments/assets/7c8f14f2-e0c1-4393-a835-2837cd81265b)
+
 
 
 # 2. Installation
