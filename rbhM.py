@@ -68,7 +68,7 @@ def axtChain(psl, chain, twoBit, size, cleanChain, output, target=""):
         outchain = os.path.join(cleanChain, i.replace(".chain","")+".chain.clean")
         qSize = os.path.join(size, i.replace(".chain","")+".chrom.sizes")
         q2bit = os.path.join(twoBit, i.replace(".chain","")+".2bit")
-        removedSuspects = os.path.join(output+".removedSuspects.bed")
+        removedSuspects = os.path.join(str(output)+".removedSuspects.bed")
         cmd = f"chainCleaner {inchain} -tSizes={tSizes} -qSizes={qSize} {t2bit} {q2bit} {outchain} {removedSuspects} -linearGap=loose"
         run_command(cmd)
 
